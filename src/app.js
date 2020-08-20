@@ -1,9 +1,13 @@
-import React from 'react';
+import React from "react";
+import {TopBar} from "./components/topBar/topBar";
+import {Description} from "./components/description/description";
+import {Box} from "@chakra-ui/core";
 
 export function App() {
     return (
-    <h1>
-        Hello world
-    </h1>
+        <Box>
+            <TopBar />
+            <Description />
+        </Box>
     );
 }
