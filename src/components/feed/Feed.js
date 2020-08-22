@@ -6,9 +6,11 @@ export function Feed() {
     const [business, setBusiness] = useState();
     axios.get("http://localhost:3001/", {
         params: {
-            latitude: 10,
-            longitude: 20
+            latitude: "40.7128",
+            longitude: "74.0060"
         }
+    }).then((response) => {
+        console.log("response: ", response);
     });
     return  (
         <Stack justifyContent={"center"} alignItems={"center"} isInline={true}>
