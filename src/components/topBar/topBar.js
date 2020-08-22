@@ -4,7 +4,7 @@ import {FaGithub, FaYelp} from "react-icons/fa/index";
 
 export function TopBar () {
     return (
-        <Box mt={"10px"} mx={"10px"}  maxWidth={"1200px"} mx={"auto"}>
+        <Box mx={"auto"} mt={"10px"} maxWidth={"1200px"} >
             <Flex alignItems={"center"} justifyContent={"space-between"}>
                 <Text fontFamily={"Tahoma"} fontSize="30px"> Tender </Text>
                 <Box>

@@ -1,21 +1,36 @@
-import React from "react";
-import {Box, Stack, Button, Image} from "@chakra-ui/core";
+import React, {useState} from "react";
+import {Box, Stack, Spinner, Button, Image} from "@chakra-ui/core";
+const axios = require("axios");
 
 export function Feed() {
+    const [business, setBusiness] = useState();
+    axios.get("http://localhost:3001/", {
+        params: {
+            latitude: 10,
+            longitude: 20
+        }
+    });
     return  (
         <Stack justifyContent={"center"} alignItems={"center"} isInline={true}>
             <Button variantColor={"red"}>
                 Less like this
             </Button>
-            <Image src={"https://bit.ly/3iY5urS"} objectFit={"scale-down"} size={"250px"} />
-            <Stack>
+            {business ? (
                 <Box>
-                    <Image src={"regular_5.png"} alt={"stars"} />
+                    <Image src={"https://bit.ly/3iY5urS"} objectFit={"scale-down"} size={"250px"} />
+                    <Stack>
+                        <Box>
+                            business ? <Image src={"images\regular_0.png"} alt={"stars"} /> : <Box>No data loaded</Box>
+                        </Box>
+                        <Box>
+                            Review(s)
+                        </Box>
+                    </Stack>
                 </Box>
-                <Box>
-                    Review(s)
-                </Box>
-            </Stack>
+                )
+                :
+                <Spinner />
+            }
             <Button variantColor={"green"}>
                 More like this
             </Button>
