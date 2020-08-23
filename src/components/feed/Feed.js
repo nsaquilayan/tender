@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Box, Stack, Spinner, Button, Image} from "@chakra-ui/core";
+import {Box, Stack, Spinner, Button, Image, PseudoBox} from "@chakra-ui/core";
 import regular_0 from "./regular_0@2x.png";
 import regular_1 from "./regular_1@2x.png";
 import regular_1_half from "./regular_1_half@2x.png";
@@ -28,10 +28,8 @@ function getImage(rating) {
     let whole = Math.floor(rating);
     let decimal = rating - Math.floor(rating);
     if (decimal > 0) {
-        console.log(pathToImage["regular_" + whole + "_half@2x.png"]);
         return pathToImage["regular_" + whole + "_half@2x.png"];
     }
-    console.log(pathToImage["regular_" + whole + "@2x.png"]);
     return pathToImage["regular_" + whole + "@2x.png"];
 }
 
@@ -63,25 +61,50 @@ export function Feed() {
             console.log("error: ", error);
         }
     );
+    if (!requestMade) {
+        return (
+            <Stack alignItems="center">
+                <Spinner />
+            </Stack>
+        );
+    }
     return  (
-        <Stack justifyContent={"center"} alignItems={"center"} isInline={true}>
-            <Button variantColor={"red"}>
+        <Stack justifyContent="center" alignItems="center" isInline={true}>
+            <Button variantColor="red">
                 Less like this
             </Button>
             {business ? (
-                <Box>
-                    <Image src={business.image_url} objectFit={"scale-down"} size={"250px"} />
-                    <Stack>
-                        <Box>
-                            <Image src={getImage(business.rating)} alt={"stars"} /> : <Box>No data loaded</Box>
-                        </Box>
-                    </Stack>
-                </Box>
+                <PseudoBox
+                    as="a"
+                    href={business.url}
+                    _hover={{ bg: "gray.100" }}
+                    p="8px"
+                    rounded="10px"
+                >
+                        <Stack alignItems="center">
+                            <Box fontSize="20px">
+                                <Box>
+                                    Name: {business.name}
+                                </Box>
+                                <Box>
+                                    Categories: {business.categories.map((category) => {
+                                        return category.title;
+                                    }).join(", ")}
+                                </Box>
+                            </Box>
+                            <Image src={business.image_url} objectFit={"scale-down"} size="250px" />
+                            <Stack>
+                                <Box>
+                                    <Image src={getImage(business.rating)} alt="stars" />
+                                </Box>
+                            </Stack>
+                        </Stack>
+                </PseudoBox>
                 )
                 :
                 <Spinner />
             }
-            <Button variantColor={"green"}>
+            <Button variantColor="green">
                 More like this
             </Button>
         </Stack>
