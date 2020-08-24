@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Box, Stack, Spinner, Button, Image, PseudoBox} from "@chakra-ui/core";
 import regular_0 from "./regular_0@2x.png";
 import regular_1 from "./regular_1@2x.png";
@@ -35,39 +35,50 @@ function getImage(rating) {
 
 export function Feed() {
     const [requestMade, setRequestMade] = useState(false);
-    const [business, setBusiness] = useState();
     const [businesses, setBusinesses] = useState();
+    const [locationError, setLocationError] = useState("");
 
-    navigator.geolocation.getCurrentPosition((position) => {
-            // fetch businesses
-            if (!requestMade) {
-                axios.get("http://localhost:3001/", {
-                    params: {
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude
-                    }
-                }).then((response) => {
-                    setRequestMade(true);
-                    let businessArray = response.data.businesses;
-                    if (businessArray) {
-                        setBusiness(businessArray.pop());
-                        setBusinesses(businessArray);
-                    }
-                    console.log("response: ", businessArray);
-                });
-            }
-        }, (error) => {
-            // TODO: handle user not allowing location permission, maybe input lat, lon
-            console.log("error: ", error);
+    useEffect(() => {
+        const fetchData = () => {
+            navigator.geolocation.getCurrentPosition((position) => {
+                // fetch businesses
+                if (!requestMade) {
+                    axios.get("http://localhost:3001/", {
+                        params: {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude
+                        }
+                    }).then((response) => {
+                        setRequestMade(true);
+                        let businessArray = response.data.businesses;
+                        if (businessArray) {
+                            setBusinesses(businessArray);
+                        }
+                        console.log("response: ", businessArray);
+                    });
+                }
+            }, (error) => {
+                // TODO: handle user not allowing location permission, maybe input lat, lon
+                console.log("user denied location permissions: ", error);
+                setLocationError("Location permissions required to use the app.");
+            });
         }
-    );
+        if (!requestMade) {
+            fetchData();
+        }
+    }, []);
+
     if (!requestMade) {
         return (
             <Stack alignItems="center">
                 <Spinner />
+                <Box>
+                    {locationError}
+                </Box>
             </Stack>
         );
     }
+    const business = businesses && businesses[0];
     return  (
         <Stack justifyContent="center" alignItems="center" isInline={true}>
             <Button variantColor="red">
@@ -92,12 +103,10 @@ export function Feed() {
                                     }).join(", ")}
                                 </Box>
                             </Box>
+                            <Box>
+                                <Image src={getImage(business.rating)} alt="stars" />
+                            </Box>
                             <Image src={business.image_url} objectFit={"scale-down"} size="250px" />
-                            <Stack>
-                                <Box>
-                                    <Image src={getImage(business.rating)} alt="stars" />
-                                </Box>
-                            </Stack>
                         </Stack>
                 </PseudoBox>
                 )
