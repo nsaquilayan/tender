@@ -10,28 +10,19 @@ import regular_3_half from "./regular_3_half@2x.png";
 import regular_4 from "./regular_4@2x.png";
 import regular_4_half from "./regular_4_half@2x.png";
 import regular_5 from "./regular_5@2x.png";
-const pathToImage = {
-    "regular_0@2x.png": regular_0,
-    "regular_1@2x.png": regular_1,
-    "regular_1_half@2x.png": regular_1_half,
-    "regular_2@2x.png": regular_2,
-    "regular_2_half@2x.png": regular_2_half,
-    "regular_3@2x.png": regular_3,
-    "regular_3_half@2x.png": regular_3_half,
-    "regular_4@2x.png": regular_4,
-    "regular_4_half@2x.png": regular_4_half,
-    "regular_5@2x.png": regular_5,
+const ratingToImage = {
+    0: regular_0,
+    1: regular_1,
+    1.5: regular_1_half,
+    2: regular_2,
+    2.5: regular_2_half,
+    3: regular_3,
+    3.5: regular_3_half,
+    4: regular_4,
+    4.5: regular_4_half,
+    5: regular_5,
 };
 const axios = require("axios");
-
-function getImage(rating) {
-    let whole = Math.floor(rating);
-    let decimal = rating - Math.floor(rating);
-    if (decimal > 0) {
-        return pathToImage["regular_" + whole + "_half@2x.png"];
-    }
-    return pathToImage["regular_" + whole + "@2x.png"];
-}
 
 export function Feed() {
     const [requestMade, setRequestMade] = useState(false);
@@ -104,7 +95,7 @@ export function Feed() {
                                 </Box>
                             </Box>
                             <Box>
-                                <Image src={getImage(business.rating)} alt="stars" />
+                                <Image src={ratingToImage[business.rating]} alt="stars" />
                             </Box>
                             <Image src={business.image_url} objectFit={"scale-down"} size="250px" />
                         </Stack>
