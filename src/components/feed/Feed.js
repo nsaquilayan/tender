@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {Box, Stack, Spinner, Button, Image, PseudoBox} from "@chakra-ui/core";
 import {BusinessCard} from "../businessCard/BusinessCard";
+import {DndProvider} from "react-dnd";
+import {HTML5Backend} from "react-dnd-html5-backend";
 
 const axios = require("axios");
 
@@ -49,18 +51,27 @@ export function Feed() {
     }
     const business = businesses && businesses[0];
     return  (
-        <Stack justifyContent="center" alignItems="center" isInline={true}>
-            <Button variantColor="red">
-                Less like this
-            </Button>
-            {business ?
-                <BusinessCard business={business} />
-                :
-                <Spinner />
-            }
-            <Button variantColor="green">
-                More like this
-            </Button>
-        </Stack>
+            <Stack justifyContent="center" alignItems="center" isInline={true} spacing={20}>
+                <Button variantColor="red">
+                    Less like this
+                </Button>
+                {business ?
+                    <Box
+                        as="a"
+                        href={business.url}
+                        bg="gray.100"
+                        rounded="10px"
+                    >
+                        <DndProvider backend={HTML5Backend}>
+                            <BusinessCard business={business} />
+                        </DndProvider>
+                    </Box>
+                    :
+                    <Spinner />
+                }
+                <Button variantColor="green">
+                    More like this
+                </Button>
+            </Stack>
     )
 }
