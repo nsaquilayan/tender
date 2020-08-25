@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Box, Stack, Spinner, Button, Image, PseudoBox} from "@chakra-ui/core";
+import {BusinessCard} from "../businessCard/BusinessCard";
 import regular_0 from "./regular_0@2x.png";
 import regular_1 from "./regular_1@2x.png";
 import regular_1_half from "./regular_1_half@2x.png";
@@ -32,22 +33,20 @@ export function Feed() {
     useEffect(() => {
         const fetchData = () => {
             navigator.geolocation.getCurrentPosition((position) => {
-                // fetch businesses
-                if (!requestMade) {
-                    axios.get("http://localhost:3001/", {
-                        params: {
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude
-                        }
-                    }).then((response) => {
-                        setRequestMade(true);
-                        let businessArray = response.data.businesses;
-                        if (businessArray) {
-                            setBusinesses(businessArray);
-                        }
-                        console.log("response: ", businessArray);
-                    });
-                }
+                //fetch businesses
+                axios.get("http://localhost:3001/", {
+                    params: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    }
+                }).then((response) => {
+                    setRequestMade(true);
+                    let businessArray = response.data.businesses;
+                    if (businessArray) {
+                        setBusinesses(businessArray);
+                    }
+                    console.log("response: ", businessArray);
+                });
             }, (error) => {
                 // TODO: handle user not allowing location permission, maybe input lat, lon
                 console.log("user denied location permissions: ", error);
@@ -75,32 +74,8 @@ export function Feed() {
             <Button variantColor="red">
                 Less like this
             </Button>
-            {business ? (
-                <PseudoBox
-                    as="a"
-                    href={business.url}
-                    _hover={{ bg: "gray.100" }}
-                    p="8px"
-                    rounded="10px"
-                >
-                        <Stack alignItems="center">
-                            <Box fontSize="20px">
-                                <Box>
-                                    Name: {business.name}
-                                </Box>
-                                <Box>
-                                    Categories: {business.categories.map((category) => {
-                                        return category.title;
-                                    }).join(", ")}
-                                </Box>
-                            </Box>
-                            <Box>
-                                <Image src={ratingToImage[business.rating]} alt="stars" />
-                            </Box>
-                            <Image src={business.image_url} objectFit={"scale-down"} size="250px" />
-                        </Stack>
-                </PseudoBox>
-                )
+            {business ?
+                <BusinessCard business={business} ratingImage={ratingToImage[business.rating]} />
                 :
                 <Spinner />
             }
