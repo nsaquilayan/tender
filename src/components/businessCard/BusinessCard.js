@@ -1,6 +1,5 @@
 import React from 'react';
-import {DndProvider, useDrag} from "react-dnd";
-import {HTML5Backend} from "react-dnd-html5-backend";
+import {useDrag} from "react-dnd";
 import {Box, Image, PseudoBox, Stack} from "@chakra-ui/core";
 import {ItemTypes, ratingToImage} from "../../constants/constants";
 

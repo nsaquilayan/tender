@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {Box, Stack, Spinner, Button, Image, PseudoBox} from "@chakra-ui/core";
+import {Box, Stack, Spinner} from "@chakra-ui/core";
 import {BusinessCard} from "../businessCard/BusinessCard";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
+import {DropZone} from "../dropzone/DropZone";
 
 const axios = require("axios");
 
@@ -29,7 +30,6 @@ export function Feed() {
                     console.log("response: ", businessArray);
                 });
             }, (error) => {
-                // TODO: handle user not allowing location permission, maybe input lat, lon
                 console.log("user denied location permissions: ", error);
                 setLocationError("Location permissions required to use the app.");
             });
@@ -50,28 +50,23 @@ export function Feed() {
         );
     }
     const business = businesses && businesses[0];
-    return  (
+    return business ?
+        (
             <Stack justifyContent="center" alignItems="center" isInline={true} spacing={20}>
-                <Button variantColor="red">
-                    Less like this
-                </Button>
-                {business ?
+                <DndProvider backend={HTML5Backend}>
+                    <DropZone color="red.200" text="Less like this" />
                     <Box
                         as="a"
                         href={business.url}
                         bg="gray.100"
                         rounded="10px"
                     >
-                        <DndProvider backend={HTML5Backend}>
-                            <BusinessCard business={business} />
-                        </DndProvider>
+                        <BusinessCard business={business} />
                     </Box>
-                    :
-                    <Spinner />
-                }
-                <Button variantColor="green">
-                    More like this
-                </Button>
+                    <DropZone color="green.200" text="More like this" />
+                </DndProvider>
             </Stack>
-    )
+        )
+        :
+        <Spinner />
 }
