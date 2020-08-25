@@ -2,10 +2,10 @@ import React from 'react';
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
 import {Box, Image, PseudoBox, Stack} from "@chakra-ui/core";
+import {ratingToImage} from "../../constants/constants";
 
 export function BusinessCard(props) {
     const business = props.business;
-    const ratingImage = props.ratingImage;
     return (
         <DndProvider backend={HTML5Backend}>
             <PseudoBox
@@ -27,7 +27,7 @@ export function BusinessCard(props) {
                         </Box>
                     </Box>
                     <Box>
-                        <Image src={ratingImage} alt="stars" />
+                        <Image src={ratingToImage[business.rating]} alt="stars" />
                     </Box>
                     <Image src={business.image_url} objectFit={"scale-down"} size="250px" />
                 </Stack>
