@@ -10,7 +10,33 @@ const axios = require("axios");
 export function Feed() {
     const [requestMade, setRequestMade] = useState(false);
     const [businesses, setBusinesses] = useState();
+    const [hiddenBusinesses, setHiddenBusinesses] = useState([]);
+    const [hiddenCategories, setHiddenCategories] = useState([]);
     const [locationError, setLocationError] = useState("");
+    /*  Puts the business currently displayed to the user into the hiddenBusinesses array
+        and each of its categories into the hiddenCategories map.
+     */
+    const lessCallback = () => {
+        let business = businesses[0];
+        let categoryTitles = business.categories.map((elem) => elem.title);
+        let newCategories = hiddenCategories;
+        let matches = businesses.filter((elem) => {
+            for (let category of elem.categories) {
+                if (categoryTitles.includes(category.title)) {
+                    return true;
+                }
+            }
+            return false;
+        });
+        let remainingBusinesses = businesses.filter((elem) => !matches.includes(elem));
+        setHiddenBusinesses(hiddenBusinesses.concat(matches));
+        setHiddenCategories(hiddenCategories.concat(categoryTitles));
+        setBusinesses(remainingBusinesses);
+    }
+    //  Places all businesses of the same categories to the front of the businesses array.
+    const moreCallback = () => {
+        console.log('businesses: ', businesses);
+    }
 
     useEffect(() => {
         const fetchData = () => {
@@ -50,11 +76,12 @@ export function Feed() {
         );
     }
     const business = businesses && businesses[0];
+
     return business ?
         (
             <Stack justifyContent="center" alignItems="center" isInline={true} spacing={20}>
                 <DndProvider backend={HTML5Backend}>
-                    <DropZone color="red.200" text="Less like this" />
+                    <DropZone color="red.200" text="Less like this" onDrop={lessCallback}/>
                     <Box
                         as="a"
                         href={business.url}
@@ -63,7 +90,7 @@ export function Feed() {
                     >
                         <BusinessCard business={business} />
                     </Box>
-                    <DropZone color="green.200" text="More like this" />
+                    <DropZone color="green.200" text="More like this" onDrop={moreCallback}/>
                 </DndProvider>
             </Stack>
         )
