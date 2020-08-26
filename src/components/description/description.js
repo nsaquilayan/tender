@@ -10,6 +10,9 @@ export function Description() {
             <Text>
                 To filter, drag the image to one of the three zones.
             </Text>
+            <Text>
+                You can click on the disliked categories below if you want to see more of that category.
+            </Text>
             <Link href="https://www.yelp.com/fusion">Data courtesy of Yelp Fusion</Link>.
         </Box>
     )

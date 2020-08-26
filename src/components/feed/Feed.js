@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Box, Stack, Spinner} from "@chakra-ui/core";
+import {Box, Stack, Spinner, Button, SimpleGrid} from "@chakra-ui/core";
 import {BusinessCard} from "../businessCard/BusinessCard";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
@@ -39,13 +39,17 @@ export function Feed() {
         let business = businesses[0];
         let categoryTitles = business.categories.map((elem) => elem.title);
         let matches = businesses.slice(1).filter((elem) => containsCategory(elem, categoryTitles));
-        //matches = matches.concat(hiddenBusinesses.filter((elem) => containsCategory(elem, categoryTitles)));
         let remaining = businesses.slice(1).filter((elem) => !matches.includes(elem));
         setBusinesses(matches.concat(remaining));
+        setHiddenBusinesses(hiddenBusinesses.concat([businesses[0]]));
     }
-    // Remove the current business being displayed.
-    const skipCallback = () => {
-        setBusinesses(businesses.slice(1));
+    // Places businesses with the category that was clicked to the front of the business array.
+    const handleClick = (event) => {
+        const targetTitle = event.target.id;
+        let matches = hiddenBusinesses.filter((elem) => containsCategory(elem, [targetTitle]));
+        setHiddenBusinesses(hiddenBusinesses.filter((elem) => !matches.includes(elem)));
+        setBusinesses(matches.concat(businesses));
+        setHiddenCategories(hiddenCategories.filter((elem) => elem !== targetTitle));
     }
 
     useEffect(() => {
@@ -83,9 +87,9 @@ export function Feed() {
             </Stack>
         );
     }
-    const business = businesses && businesses[0];
 
-    if (businesses.length === 1 && requestMade) {
+    const business = businesses && businesses[0];
+    if (businesses.length === 1 && requestMade && hiddenCategories.length === 0) {
         return (
             <Stack>
                 <Box textAlign="center">
@@ -108,6 +112,14 @@ export function Feed() {
     return business ?
         (
             <Stack justifyContent="center" alignItems="center">
+                <Stack justifyContent="center" alignItems="center">
+                    <Box> Disliked categories: </Box>
+                    <SimpleGrid columns={5} spacing={5}>
+                        {hiddenCategories.map((category) => {
+                            return <Button variant="outline" id={category} onClick={handleClick}>{category}</Button>
+                        })}
+                    </SimpleGrid>
+                </Stack>
                 <Box>Remaining: {businesses.length}</Box>
                 <Stack justifyContent="center" alignItems="center" isInline={true} spacing={20}>
                     <DndProvider backend={HTML5Backend}>
@@ -122,12 +134,18 @@ export function Feed() {
                         </Box>
                         <Stack>
                             <DropZone color="green.200" text="More like this" onDrop={moreCallback}/>
-                            <DropZone color="gray.200" text="Skip" onDrop={skipCallback}/>
                         </Stack>
                     </DndProvider>
                 </Stack>
             </Stack>
         )
         :
-        <Spinner />
+        <Stack justifyContent="center" alignItems="center">
+            <Box> Disliked categories: </Box>
+            <SimpleGrid columns={5} spacing={5}>
+                {hiddenCategories.map((category) => {
+                    return <Button id={category} onClick={handleClick}>{category}</Button>
+                })}
+            </SimpleGrid>
+        </Stack>
 }
