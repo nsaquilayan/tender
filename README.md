@@ -1,3 +1,8 @@
+Use the app at: [http://tender-react-app.herokuapp.com](http://tender-react-app.herokuapp.com/)
+
+Note 9/7/2020: Updating to allow user to input longitude and latitude since 
+Chrome does not allow location permissions for http applications.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
