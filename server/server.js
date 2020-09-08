@@ -3,11 +3,14 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const axios = require("axios");
+const path = require('path');
 const port = process.env.PORT || 3001;
 
 app.use(cors());
 
-app.get("/", (req, res) => {
+app.use("/", express.static(path.join(__dirname, "../react-ui/build")));
+
+app.get("/api", (req, res) => {
     if (!req.query.location && !req.query.latitude && !req.query.longitude) {
         res.status(400).send();
     } else {
@@ -21,12 +24,12 @@ app.get("/", (req, res) => {
                 longitude: req.query.longitude
             }
         }).then((data) => {
-            res.status(200).send(data.data);
+            res.status(data.status).send(data.data);
         }).catch((error) => {
             console.log('error: ', error)
         });
     }
-})
+});
 
 app.listen(port, () => {
     console.log(`listening at http://localhost:${port}`);
