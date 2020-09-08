@@ -10,7 +10,7 @@
   },
   "main": "server.js",
   "scripts": {
-    "start": "node server",
+    "start": "node server/server.js",
     "build": "cd react-ui/ && npm install && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
