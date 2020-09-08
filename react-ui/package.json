@@ -2,7 +2,7 @@
   "name": "tender",
   "version": "10.19.0",
   "private": true,
-  "proxy": 3001,
+  "proxy": "http://localhost:3001",
   "dependencies": {
     "@chakra-ui/core": "^0.8.0",
     "@emotion/core": "^10.0.35",

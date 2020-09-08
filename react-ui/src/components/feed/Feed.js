@@ -56,8 +56,7 @@ export function Feed() {
         const fetchData = () => {
             navigator.geolocation.getCurrentPosition((position) => {
                 //fetch businesses
-                const PORT = process.env.REACT_APP_PORT;
-                let url = "http://localhost:" + ((PORT && PORT.toString()) || "3001") + "/api";
+                let url = "/api";
                 axios.get(url, {
                     params: {
                         latitude: position.coords.latitude,
